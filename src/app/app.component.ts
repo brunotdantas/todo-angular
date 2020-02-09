@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Todo } from 'src/models/todo.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { CssSelector } from '@angular/compiler';
 
 @Component({
   selector: 'app-root', // <app-root>
@@ -8,9 +9,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  public mode = 'list'; // modo 1 adicionar item, modo 2 visualizar lista de itens
+  public mode = 'list'; // Mode 1 = add item / Mode 2 visualize items
   public todos: Todo[]   = [];
-  public title: String  = 'Minhas tarefas';
+  public title: String  = 'My tasks';
   public form : FormGroup;
 
 
@@ -23,18 +24,16 @@ export class AppComponent {
       ])]
     });
 
-    this.load(); // Lê local storage
+    this.load(); // Read local storage
 
   }
 
-  // Ações botões controle da tarefa
-  remove( todo: Todo ){
-    const index = this.todos.indexOf(todo);
-    if(index !== -1){
-      this.todos.splice(index,1);
-    }
+  changeMode(mode:string){
+    this.mode = mode;
+  }
 
-
+  clear(){
+    this.form.reset();
   }
 
   markAsDone(todo: Todo){
@@ -45,7 +44,7 @@ export class AppComponent {
     todo.done = false;
   }
 
-  // Ações do botão de salvar
+  // Save task
   add(){
     const title = this.form.controls['title'].value;
     const id    = this.todos.length + 1;
@@ -54,17 +53,14 @@ export class AppComponent {
     this.clear();
   }
 
-  clear(){
-    this.form.reset();
-  }
-
-  // Salva ao localstorage
+  // Save to localstorage
   save(){
     const data: string = JSON.stringify(this.todos);
     localStorage.setItem('todos', data);
     this.mode = 'list';
   }
 
+  // Get from local storage and populate the array
   load(){
     const data = localStorage.getItem('todos');
     if (data){
@@ -75,8 +71,13 @@ export class AppComponent {
 
   }
 
-  changeMode(mode:string){
-    this.mode = mode;
-  }
 
+  // Remove task
+  remove( todo: Todo ){
+    const index = this.todos.indexOf(todo);
+    if(index !== -1){
+      this.todos.splice(index,1);
+    }
+
+  }
 }

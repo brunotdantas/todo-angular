@@ -1,0 +1,4 @@
+/* Use dash when the task is finished */
+.done {
+    text-decoration: line-through;
+  }
